@@ -29,7 +29,7 @@ public class Person {
     @Column(name="employee_reference")
     private String employeeReference;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="person_id")
     private Set<Contact> contacts;
 
@@ -38,12 +38,29 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public long getId() {
-        return id;
+    public Person(){}
+
+    public Person(Name name,
+                  Address address, Date birthday,
+                  double gwa, Date dateHired,
+                  boolean currentlyEmployed,
+                  String employeeReference,
+                  Set<Contact> contacts,
+                  Set<Role> roles){
+        this.name = name;
+        this.address = address;
+        this.birthday = birthday;
+        this.gwa = gwa;
+        this.dateHired = dateHired;
+        this.currentlyEmployed = currentlyEmployed;
+        this.employeeReference = employeeReference;
+        this.contacts = contacts;
+        this.roles = roles;
+
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public long getId() {
+        return id;
     }
 
     public Name getName() {

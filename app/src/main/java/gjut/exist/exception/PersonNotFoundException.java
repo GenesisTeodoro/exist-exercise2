@@ -1,4 +1,4 @@
-package gjut.exist.controller.exceptions;
+package gjut.exist.exception;
 
 public class PersonNotFoundException extends RuntimeException {
     public PersonNotFoundException(Long id) {

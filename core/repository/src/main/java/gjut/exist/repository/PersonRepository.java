@@ -2,10 +2,15 @@ package gjut.exist.repository;
 
 import gjut.exist.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    List<Person> findByLastName(String lastName);
-    Person findById(long id);
+
+    Optional<Person> findById(Long id);
+    List<Person> findByNameLastName(String lastName);
+
 }
