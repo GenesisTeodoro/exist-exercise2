@@ -7,6 +7,7 @@ import com.exist.core.data.entity.Name;
 import com.exist.core.data.entity.Role;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class PersonDTO {
     private Date dateHired;
     private boolean currentlyEmployed;
     private String employeeReference;
+    private BigDecimal employeeRating;
     private Set<Contact> contacts;
     private Set<Role> roles;
 

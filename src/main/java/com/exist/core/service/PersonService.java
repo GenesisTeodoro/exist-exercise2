@@ -1,17 +1,20 @@
 package com.exist.core.service;
 
+import com.exist.core.data.dto.ContactDTO;
 import com.exist.core.data.dto.PersonDTO;
-import com.exist.core.data.entity.Person;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.exist.core.data.dto.RoleDTO;
 
 import java.util.List;
 
 public interface PersonService {
-    List<Person> getAllPerson(String lastName);
-    Person addPerson(Person person);
-    Person updatePerson(long id, Person person);
-    Person getPersonById(long id);
+    List<PersonDTO> getAllPerson(String lastName);
+    PersonDTO addPerson(PersonDTO personDTO);
+    PersonDTO updatePerson(long id, PersonDTO personDTO);
+    PersonDTO getPersonById(long id);
     void deletePerson(long id);
     void deleteAllPerson();
+    ContactDTO createPersonContact(long personId, ContactDTO contactDto);
+    void deletePersonContact(long personId, long contactId);
+    RoleDTO createPersonRole(long personId, RoleDTO roleDto);
+    void deletePersonRole(long personId, long roleId);
 }

@@ -1,8 +1,15 @@
 package com.exist.core.data.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name="Contact")
 public class Contact {
 
@@ -16,44 +23,16 @@ public class Contact {
     private String contactInfo;
     @Column(name = "contact_order")
     private int contactOrder;
+    @Column(name = "person_id")
+    private long personId;
 
-    public Contact(){}
-
-    public Contact(long id, String contactType, String contactInfo){
-        this.id = id;
+    public Contact(String contactType,
+                   String contactInfo,
+                   int contactOrder){
         this.contactType = contactType;
         this.contactInfo = contactInfo;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getContactType() {
-        return contactType;
-    }
-
-    public void setContactType(String contactType) {
-        this.contactType = contactType;
-    }
-
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
-
-    public int getContactOrder() {
-        return contactOrder;
-    }
-
-    public void setContactOrder(int contactOrder) {
         this.contactOrder = contactOrder;
+
     }
+
 }

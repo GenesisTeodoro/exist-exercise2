@@ -1,9 +1,12 @@
 package com.exist.core.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -34,11 +37,14 @@ public class Person {
     @Column(name="employee_reference")
     private String employeeReference;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name="employee_rating")
+    private BigDecimal employeeRating;
+
+    @OneToMany(targetEntity = Contact.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="person_id")
     private Set<Contact> contacts;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="person_role", joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
@@ -48,6 +54,7 @@ public class Person {
                   double gwa, Date dateHired,
                   boolean currentlyEmployed,
                   String employeeReference,
+                  BigDecimal employeeRating,
                   Set<Contact> contacts,
                   Set<Role> roles){
         this.name = name;
@@ -57,6 +64,7 @@ public class Person {
         this.dateHired = dateHired;
         this.currentlyEmployed = currentlyEmployed;
         this.employeeReference = employeeReference;
+        this.employeeRating = employeeRating;
         this.contacts = contacts;
         this.roles = roles;
 
