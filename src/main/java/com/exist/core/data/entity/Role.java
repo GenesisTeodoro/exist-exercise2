@@ -31,9 +31,12 @@ public class Role {
 
     public Role(
                 String roleType,
-                boolean isActive){
+                boolean isActive,
+                Set<Person> persons
+    ){
         this.roleType = roleType;
         this.isActive = isActive;
+        this.persons = persons;
     }
 
     @Override

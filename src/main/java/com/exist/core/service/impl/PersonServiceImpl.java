@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -188,7 +189,8 @@ public class PersonServiceImpl implements PersonService {
         if(person.isPresent()){
             Role _role = roleRepo.save(new Role(
                     role.getRoleType(),
-                    role.isActive()
+                    role.isActive(),
+                    role.getPersons()
             ));
 
             roleResponse = mapper.map(_role, RoleDTO.class);

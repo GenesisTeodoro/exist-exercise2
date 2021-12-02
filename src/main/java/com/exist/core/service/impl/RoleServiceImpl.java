@@ -53,7 +53,6 @@ public class RoleServiceImpl implements RoleService {
         Role role = mapper.map(roleRequest, Role.class);
 
         Role _role = repository.save(new Role(
-                role.getRoleId(),
                 role.getRoleType(),
                 role.isActive(),
                 role.getPersons()
