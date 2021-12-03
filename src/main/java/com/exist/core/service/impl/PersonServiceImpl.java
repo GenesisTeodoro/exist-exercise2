@@ -9,17 +9,17 @@ import com.exist.core.data.entity.Person;
 import com.exist.core.data.entity.Role;
 import com.exist.core.data.exception.ContactNotFoundException;
 import com.exist.core.data.exception.PersonNotFoundException;
+import com.exist.core.data.exception.RoleNotFoundException;
 import com.exist.core.repository.ContactRepository;
 import com.exist.core.repository.PersonRepository;
 import com.exist.core.repository.RoleRepository;
 import com.exist.core.service.PersonService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -156,11 +156,17 @@ public class PersonServiceImpl implements PersonService {
         Optional<Person> person = personRepo.findById(personId);
 
         if(person.isPresent()){
+            contact.setPersonId(personId);
+
             Contact _contact = contactRepo.save(new Contact(
                     contact.getContactType(),
                     contact.getContactInfo(),
                     contact.getContactOrder()
             ));
+
+            Person _person = person.get();
+            _person.getContacts().add(_contact);
+            personRepo.save(_person);
 
             contactDto = mapper.map(_contact, ContactDTO.class);
         }else{
@@ -180,25 +186,21 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public RoleDTO createPersonRole(long personId, RoleDTO roleDto) {
-        RoleDTO roleResponse;
-        Role role = mapper.map(roleDto, Role.class);
-
+    public void addPersonRole(long personId, long roleId) {
         Optional<Person> person = personRepo.findById(personId);
 
         if(person.isPresent()){
-            Role _role = roleRepo.save(new Role(
-                    role.getRoleType(),
-                    role.isActive(),
-                    role.getPersons()
-            ));
+            Role role = roleRepo.findById(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
 
-            roleResponse = mapper.map(_role, RoleDTO.class);
+            Person _person = person.get();
+            _person.getRoles().add(role);
+            personRepo.save(_person);
+
         }else{
             throw new PersonNotFoundException(personId);
         }
 
-        return roleResponse;
+
     }
 
     @Override

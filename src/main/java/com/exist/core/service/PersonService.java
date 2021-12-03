@@ -15,6 +15,6 @@ public interface PersonService {
     void deleteAllPerson();
     ContactDTO createPersonContact(long personId, ContactDTO contactDto);
     void deletePersonContact(long personId, long contactId);
-    RoleDTO createPersonRole(long personId, RoleDTO roleDto);
+    void addPersonRole(long personId, long roleId);
     void deletePersonRole(long personId, long roleId);
 }

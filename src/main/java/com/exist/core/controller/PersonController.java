@@ -67,10 +67,10 @@ public class PersonController {
         return new ResponseEntity<>(OK);
     }
 
-    @PostMapping(path = "/{id}/role")
-    public ResponseEntity<RoleDTO> createPersonRole(
-            @PathVariable("id") long personId, @RequestBody RoleDTO roleDto){
-        personService.createPersonRole(personId, roleDto);
+    @PostMapping(path = "/{id}/role/{roleId}")
+    public ResponseEntity<RoleDTO> addPersonRole(
+            @PathVariable("id") long personId, @PathVariable("roleId") long roleId){
+        personService.addPersonRole(personId, roleId);
         return new ResponseEntity<>(CREATED);
     }
 

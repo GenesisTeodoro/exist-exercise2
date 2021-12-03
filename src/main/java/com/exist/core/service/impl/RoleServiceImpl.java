@@ -54,8 +54,7 @@ public class RoleServiceImpl implements RoleService {
 
         Role _role = repository.save(new Role(
                 role.getRoleType(),
-                role.isActive(),
-                role.getPersons()
+                role.isActive()
         ));
 
         RoleDTO roleResponse = mapper.map(_role, RoleDTO.class);
@@ -72,7 +71,6 @@ public class RoleServiceImpl implements RoleService {
 
         if(roleData.isPresent()){
             Role _role = roleData.get();
-            _role.setRoleId(role.getRoleId());
             _role.setRoleType(role.getRoleType());
             _role.setActive(role.isActive());
             _role.setPersons(role.getPersons());

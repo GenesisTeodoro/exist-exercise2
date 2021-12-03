@@ -23,7 +23,7 @@ public class Contact {
     private String contactInfo;
     @Column(name = "contact_order")
     private int contactOrder;
-    @Column(name = "person_id")
+    @Column(name = "person_id", insertable = false, updatable = false)
     private long personId;
 
     public Contact(String contactType,
