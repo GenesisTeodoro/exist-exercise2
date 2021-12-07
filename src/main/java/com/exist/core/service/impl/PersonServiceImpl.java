@@ -69,6 +69,7 @@ public class PersonServiceImpl implements PersonService {
 
     }
 
+
     //Add Person
     @Override
     public PersonDTO addPerson(PersonDTO personRequest) {
@@ -205,9 +206,12 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void deletePersonRole(long personId, long roleId) {
         Optional<Person> person = personRepo.findById(personId);
+        Role role = roleRepo.findByRoleId(roleId);
 
         if(person.isPresent()){
-            roleRepo.deleteRoleByRoleId(roleId);
+            Person _person = person.get();
+            _person.getRoles().remove(role);
+            personRepo.save(_person);
         }else{
             throw new PersonNotFoundException(personId);
         }

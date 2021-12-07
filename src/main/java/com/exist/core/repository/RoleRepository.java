@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role deleteRoleByRoleId(long roleId);
+    Role findByRoleId(long roleId);
 }
