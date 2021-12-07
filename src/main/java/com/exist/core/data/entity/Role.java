@@ -26,9 +26,6 @@ public class Role {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
-    @ManyToMany(targetEntity = Person.class, mappedBy="roles", fetch=FetchType.EAGER)
-    private Set<Person> persons;
-
     public Role(
                 String roleType,
                 boolean isActive

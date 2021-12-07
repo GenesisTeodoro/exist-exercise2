@@ -22,7 +22,7 @@ public class PersonDTO {
     private boolean currentlyEmployed;
     private String employeeReference;
     private BigDecimal employeeRating;
-    private Set<Contact> contacts;
-    private Set<Role> roles;
+    private Set<ContactDTO> contacts;
+    private Set<RoleDTO> roles;
 
 }

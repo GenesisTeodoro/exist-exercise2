@@ -3,7 +3,6 @@ package com.exist.core.service.impl;
 
 import com.exist.core.data.dto.ContactDTO;
 import com.exist.core.data.dto.PersonDTO;
-import com.exist.core.data.dto.RoleDTO;
 import com.exist.core.data.entity.Contact;
 import com.exist.core.data.entity.Person;
 import com.exist.core.data.entity.Role;
@@ -77,7 +76,7 @@ public class PersonServiceImpl implements PersonService {
         //convert DTO to Entity
         Person person = mapper.map(personRequest, Person.class);
 
-        Person _person = personRepo.save(new Person(
+        personRepo.save(new Person(
                 person.getName(),
                 person.getAddress(),
                 person.getBirthday(),
@@ -91,7 +90,7 @@ public class PersonServiceImpl implements PersonService {
         ));
 
         //Convert Entity to DTO
-        PersonDTO personResponse = mapper.map(_person, PersonDTO.class);
+        PersonDTO personResponse = mapper.map(person, PersonDTO.class);
 
         return personResponse;
 
@@ -158,17 +157,17 @@ public class PersonServiceImpl implements PersonService {
         if(person.isPresent()){
             contact.setPersonId(personId);
 
-            Contact _contact = contactRepo.save(new Contact(
+            contactRepo.save(new Contact(
                     contact.getContactType(),
                     contact.getContactInfo(),
                     contact.getContactOrder()
             ));
 
             Person _person = person.get();
-            _person.getContacts().add(_contact);
+            _person.getContacts().add(contact);
             personRepo.save(_person);
 
-            contactDto = mapper.map(_contact, ContactDTO.class);
+            contactDto = mapper.map(contact, ContactDTO.class);
         }else{
             throw new PersonNotFoundException(personId);
         }

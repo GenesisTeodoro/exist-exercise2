@@ -52,12 +52,12 @@ public class RoleServiceImpl implements RoleService {
 
         Role role = mapper.map(roleRequest, Role.class);
 
-        Role _role = repository.save(new Role(
+        repository.save(new Role(
                 role.getRoleType(),
                 role.isActive()
         ));
 
-        RoleDTO roleResponse = mapper.map(_role, RoleDTO.class);
+        RoleDTO roleResponse = mapper.map(role, RoleDTO.class);
         return roleResponse;
     }
 
@@ -73,7 +73,6 @@ public class RoleServiceImpl implements RoleService {
             Role _role = roleData.get();
             _role.setRoleType(role.getRoleType());
             _role.setActive(role.isActive());
-            _role.setPersons(role.getPersons());
 
             repository.save(_role);
             roleResponse = mapper.map(_role, RoleDTO.class);
