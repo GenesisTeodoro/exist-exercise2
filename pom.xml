@@ -20,6 +20,7 @@
 		<h2.database.version>1.4.200</h2.database.version>
 		<postgresql.version>42.2.24</postgresql.version>
 		<lombok.version>1.18.20</lombok.version>
+		<lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
 		<mapstruct.version>1.4.2.Final</mapstruct.version>
 
 
@@ -56,11 +57,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>2.3.5</version>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
@@ -68,7 +64,7 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>1.4.2.Final</version>
+			<version>${mapstruct.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -90,6 +86,16 @@
 					<source>1.8</source>
 					<target>1.8</target>
 					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>${lombok.mapstruct.binding.version}</version>
+						</path>
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>

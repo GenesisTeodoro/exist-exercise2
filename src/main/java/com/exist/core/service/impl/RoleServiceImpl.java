@@ -6,7 +6,6 @@ import com.exist.core.data.exception.RoleNotFoundException;
 import com.exist.core.data.mapper.CoreMapper;
 import com.exist.core.repository.RoleRepository;
 import com.exist.core.service.RoleService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
