@@ -9,13 +9,12 @@ import com.exist.core.data.entity.Role;
 import com.exist.core.data.exception.ContactNotFoundException;
 import com.exist.core.data.exception.PersonNotFoundException;
 import com.exist.core.data.exception.RoleNotFoundException;
+import com.exist.core.data.mapper.CoreMapper;
 import com.exist.core.repository.ContactRepository;
 import com.exist.core.repository.PersonRepository;
 import com.exist.core.repository.RoleRepository;
 import com.exist.core.service.PersonService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService {
 
     @Autowired
-    private ModelMapper mapper;
+    public CoreMapper mapper;
 
     @Autowired
     private PersonRepository personRepo;
@@ -48,7 +47,7 @@ public class PersonServiceImpl implements PersonService {
            personList = personRepo.findByNameLastName(lastName);
 
         return personList.stream()
-                .map(person -> mapper.map(person, PersonDTO.class))
+                .map(person -> mapper.toDto(person))
                 .collect(Collectors.toList());
 
     }
@@ -56,16 +55,10 @@ public class PersonServiceImpl implements PersonService {
     //Get Person By Id
     @Override
     public PersonDTO getPersonById(long id) {
-        Optional<Person> personData = personRepo.findById(id);
-        Person personResponse;
+        Person person = personRepo.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
 
-        if (personData.isPresent()) {
-            personResponse = personData.get();
-        } else {
-            throw new PersonNotFoundException(id);
-        }
-
-        return mapper.map(personResponse, PersonDTO.class);
+        return mapper.toDto(person);
 
     }
 
@@ -74,26 +67,9 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonDTO addPerson(PersonDTO personRequest) {
 
-        //convert DTO to Entity
-        Person person = mapper.map(personRequest, Person.class);
+        Person person = mapper.toEntity(personRequest);
 
-        personRepo.save(new Person(
-                person.getName(),
-                person.getAddress(),
-                person.getBirthday(),
-                person.getGwa(),
-                person.getDateHired(),
-                person.isCurrentlyEmployed(),
-                person.getEmployeeReference(),
-                person.getEmployeeRating(),
-                person.getContacts(),
-                person.getRoles()
-        ));
-
-        //Convert Entity to DTO
-        PersonDTO personResponse = mapper.map(person, PersonDTO.class);
-
-        return personResponse;
+        return mapper.toDto(personRepo.save(person));
 
     }
 
@@ -101,35 +77,15 @@ public class PersonServiceImpl implements PersonService {
     //Update Person
     @Override
     public PersonDTO updatePerson(long id, PersonDTO personRequest) {
+        Person person = personRepo.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
 
-        PersonDTO personResponse;
+        mapper.updateEntity(personRequest, person);
 
-        //Convert DTO to Entity
-        Person person = mapper.map(personRequest, Person.class);
+        personRepo.save(person);
 
-        Optional<Person> personData = personRepo.findById(id);
+        return mapper.toDto(person);
 
-        if (personData.isPresent()) {
-            Person _person = personData.get();
-            _person.setName(person.getName());
-            _person.setAddress(person.getAddress());
-            _person.setBirthday(person.getBirthday());
-            _person.setGwa(person.getGwa());
-            _person.setDateHired(person.getDateHired());
-            _person.setCurrentlyEmployed(person.isCurrentlyEmployed());
-            _person.setEmployeeReference(person.getEmployeeReference());
-            _person.setEmployeeRating(person.getEmployeeRating());
-            _person.setContacts(person.getContacts());
-            _person.setRoles(person.getRoles());
-
-            personRepo.save(_person);
-
-            personResponse = mapper.map(_person, PersonDTO.class);
-        } else {
-            throw new PersonNotFoundException(id);
-        }
-
-        return personResponse;
     }
 
     //Delete Person
@@ -150,25 +106,22 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public ContactDTO createPersonContact(long personId, ContactDTO contactRequest) {
+
         ContactDTO contactDto;
-        Contact contact = mapper.map(contactRequest, Contact.class);
+        Contact contact = mapper.toEntity(contactRequest);
 
         Optional<Person> person = personRepo.findById(personId);
 
         if(person.isPresent()){
             contact.setPersonId(personId);
 
-            contactRepo.save(new Contact(
-                    contact.getContactType(),
-                    contact.getContactInfo(),
-                    contact.getContactOrder()
-            ));
+            contactRepo.save(contact);
 
             Person _person = person.get();
             _person.getContacts().add(contact);
             personRepo.save(_person);
 
-            contactDto = mapper.map(contact, ContactDTO.class);
+            contactDto = mapper.toDto(contact);
         }else{
             throw new PersonNotFoundException(personId);
         }

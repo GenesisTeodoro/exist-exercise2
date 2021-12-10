@@ -1,9 +1,9 @@
 package com.exist.core.service.impl;
 
-import com.exist.core.data.dto.PersonDTO;
 import com.exist.core.data.dto.RoleDTO;
 import com.exist.core.data.entity.Role;
 import com.exist.core.data.exception.RoleNotFoundException;
+import com.exist.core.data.mapper.CoreMapper;
 import com.exist.core.repository.RoleRepository;
 import com.exist.core.service.RoleService;
 import org.modelmapper.ModelMapper;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     @Autowired
-    private ModelMapper mapper;
+    public CoreMapper mapper;
 
     @Autowired
     private RoleRepository repository;
@@ -29,12 +29,13 @@ public class RoleServiceImpl implements RoleService {
         List<Role> roleList = repository.findAll();
 
         return roleList.stream()
-                .map(role -> mapper.map(role, RoleDTO.class))
+                .map(role -> mapper.toDto(role))
                 .collect(Collectors.toList());
     }
 
     @Override
     public RoleDTO getRoleById(long roleId) {
+
         Optional<Role> roleData = repository.findById(roleId);
         Role roleResponse;
 
@@ -44,43 +45,35 @@ public class RoleServiceImpl implements RoleService {
             throw new RoleNotFoundException(roleId);
         }
 
-        return mapper.map(roleResponse, RoleDTO.class);
+        return mapper.toDto(roleResponse);
     }
 
     @Override
     public RoleDTO createRole(RoleDTO roleRequest) {
 
-        Role role = mapper.map(roleRequest, Role.class);
+        Role role = mapper.toEntity(roleRequest);
 
-        repository.save(new Role(
-                role.getRoleType(),
-                role.isActive()
-        ));
+        repository.save(role);
 
-        RoleDTO roleResponse = mapper.map(role, RoleDTO.class);
-        return roleResponse;
+        return mapper.toDto(role);
     }
 
     @Override
     public RoleDTO updateRole(long roleId, RoleDTO roleDto) {
-        RoleDTO roleResponse;
 
-        Role role = mapper.map(roleDto, Role.class);
+        Role role = mapper.toEntity(roleDto);
 
-        Optional<Role> roleData = repository.findById(roleId);
+        Role roleData = repository.findById(roleId)
+                .orElseThrow(() -> new RoleNotFoundException(roleId));
 
-        if(roleData.isPresent()){
-            Role _role = roleData.get();
-            _role.setRoleType(role.getRoleType());
-            _role.setActive(role.isActive());
+        roleData.setRoleType(role.getRoleType());
+        roleData.setActive(role.isActive());
 
-            repository.save(_role);
-            roleResponse = mapper.map(_role, RoleDTO.class);
-        }else{
-            throw new RoleNotFoundException(roleId);
-        }
+        mapper.updateEntity(roleDto, roleData);
 
-        return roleResponse;
+        repository.save(roleData);
+
+        return mapper.toDto(roleData);
     }
 
     @Override
